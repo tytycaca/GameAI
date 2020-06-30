@@ -12,7 +12,7 @@ from torchvision import transforms
 from torchvision.utils import make_grid
 
 # CNN 정의.
-# 기존 Cifar10 tutorial 을 개조한 모델에서의 학습 속도가 너무 느려서 새롭게 AlexNet 모델을 참고하여 정의함.
+# 기존 Cifar10 tutorial 을 개조한 모델에서는 수정을 거듭해도 정확도가 상승하지 않아, 새롭게 AlexNet 모델을 참고하여 정의함.
 # 원본을 간소화 하였음. (convolutional, maxpooling, dropout 등의 layer 개수 하향조정)
 # 혼동을 방지하기 위해 파라매터 표기.
 # Cifar10 의 리사이징된 32x32 사이즈 이미지와 달리 128x128 이미지를 100x100 사이즈로 크롭하여 사용. (AlextNet 은 224x224 사용)
@@ -31,7 +31,7 @@ class My_Net(nn.Module):
         self.conv3 = nn.Conv2d(in_channels=256, out_channels=384, kernel_size=3, stride=1)
         self.LRN = nn.LocalResponseNorm(3)
         self.pool = nn.MaxPool2d(kernel_size=3, stride=2)
-        self.fc1 = nn.Linear(in_features=384 * 3 * 3, out_features=864)   # 출력층까지 1/4 씩 변화하게 설정, in_features 사이즈 수정
+        self.fc1 = nn.Linear(in_features=384 * 4 * 4, out_features=864)   # 출력층까지 1/4 씩 변화하게 설정, in_features 사이즈 수정
         self.fc2 = nn.Linear(in_features=864, out_features=216)   # 출력층까지 1/4 씩 변화하게 설정
         self.fc3 = nn.Linear(in_features=216, out_features=4)   # 출력층 (Romanesque, Gothic, Renaissance, Baroque 4 가지)
 
@@ -44,7 +44,7 @@ class My_Net(nn.Module):
         x = self.LRN(x)
         x = self.pool(x)
         # print(x.shape)    # output size 확인용
-        x = x.view(-1, 384 * 3 * 3)    # flatten layer
+        x = x.view(-1, 384 * 4 * 4)    # flatten layer
         x = F.relu(self.fc1(x))
         x = F.dropout(x, training=self.training)
         x = F.relu(self.fc2(x))
@@ -91,7 +91,7 @@ def main():
     # 건축물 사진의 대부분이 가장자리가 하늘이나 구름 등 건물과는 상관없는 요소들이기 때문에 Center Crop 을 사용하여 100 x 100 사이즈로 크롭하여 샘플링함.
     trans = transforms.Compose(
         [transforms.Resize((128, 128)),
-         transforms.CenterCrop(100),
+         # transforms.CenterCrop(100),
          transforms.ToTensor(),
          transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
          ])

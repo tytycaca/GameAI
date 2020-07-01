@@ -18,7 +18,7 @@ from torchvision.utils import make_grid
 # Cifar10 의 리사이징된 32x32 사이즈 이미지와 달리 128x128 이미지를 100x100 사이즈로 크롭하여 사용. (AlextNet 은 224x224 사용)
 # convolutional layer 추가. (AlexNet 참조)
 # convolutional layer, LRN layer 추가 및 입력층 사이즈 변화 등으로 인한 output size 변화에 맞게 full connected layer 의 입력층을 32 * 4 * 4 로 수정.
-# flatten layer 또한 맞게 수정. (32 * 4 * 4)
+# flatten layer 또한 맞게 수정. (384 * 3 * 3)
 # ReLU 함수의 단점인 양수 방향으로 무한하게 값이 커지는 것을 방지하기 위해 정규화 과정인 LRN Layer 를 추가. (Local Response Normalization)
 # over-fitting 을 막기 위한 dropout layer 추가.
 # 원본인 AlexNet 과 달리 dropout layer 는 한 번만 넣었음. (over-fitting 의 위험성보다 학습 속도에 좀 더 집중함)
